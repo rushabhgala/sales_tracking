@@ -62,14 +62,20 @@ sales_tracking/
 ```bash
 git clone https://github.com/rushabhgala/sales_tracking.git
 cd sales_tracking
+```
 
 ### 2. Set up virtual environment
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
 
 ### 3. Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
 ### 4. Run the server
+```bash
 python app.py
-
+```
