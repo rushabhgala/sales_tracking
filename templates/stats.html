@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sales Analytics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: sans-serif;
+    background: #f5f6fa;
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background: #efefef;
+}
+select {
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+h2 { margin-top: 25px; }
+canvas { margin-top: 20px; }
+</style>
+</head>
+
+<body>
+
+<a href="/" style="text-decoration:none; padding:10px 15px; background:#007bff; color:white; border-radius:6px;">← Back</a>
+
+<h1>Item Sales Analytics</h1>
+
+<div class="card">
+    <h2>Select Item</h2>
+
+    <select id="itemSelect">
+        <option value="">-- Choose Item --</option>
+        {% for item in all_items %}
+        <option value="{{ item.id }}">{{ item.name }}</option>
+        {% endfor %}
+    </select>
+
+    <div id="summary" style="display:none;">
+        <h2>Summary</h2>
+        <table>
+            <tr><th>Period</th><th>Qty</th><th>Earnings (₹)</th></tr>
+            <tr><td>Today</td><td id="tQty">0</td><td id="tEarn">₹0</td></tr>
+            <tr><td>This Week</td><td id="wQty">0</td><td id="wEarn">₹0</td></tr>
+            <tr><td>This Month</td><td id="mQty">0</td><td id="mEarn">₹0</td></tr>
+        </table>
+
+        <h2>Weekly Qty</h2>
+        <canvas id="weekQtyChart"></canvas>
+
+        <h2>Weekly Earnings</h2>
+        <canvas id="weekEarnChart"></canvas>
+
+        <h2>Monthly Qty (per week)</h2>
+        <canvas id="monthQtyChart"></canvas>
+
+        <h2>Monthly Earnings (per week)</h2>
+        <canvas id="monthEarnChart"></canvas>
+    </div>
+</div>
+
+
+<script>
+let weekQtyChart, weekEarnChart, monthQtyChart, monthEarnChart;
+
+document.getElementById("itemSelect").addEventListener("change", async function () {
+    const id = this.value;
+    if (!id) return;
+
+    document.getElementById("summary").style.display = "block";
+
+    // 1) SUMMARY
+    const summary = await fetch(`/api/item_summary/${id}`).then(r => r.json());
+
+    document.getElementById("tQty").innerText = summary.today.qty;
+    document.getElementById("tEarn").innerText = "₹" + summary.today.earn;
+
+    document.getElementById("wQty").innerText = summary.week.qty;
+    document.getElementById("wEarn").innerText = "₹" + summary.week.earn;
+
+    document.getElementById("mQty").innerText = summary.month.qty;
+    document.getElementById("mEarn").innerText = "₹" + summary.month.earn;
+
+
+    // 2) WEEK BREAKDOWN
+    const weekData = await fetch(`/api/item_week_breakdown/${id}`).then(r => r.json());
+
+    if (weekQtyChart) weekQtyChart.destroy();
+    weekQtyChart = new Chart(document.getElementById("weekQtyChart"), {
+        type: "bar",
+        data: {
+            labels: weekData.labels,
+            datasets: [{
+                label: "Qty",
+                data: weekData.qty,
+                backgroundColor: "rgba(54,162,235,0.7)"
+            }]
+        }
+    });
+
+    if (weekEarnChart) weekEarnChart.destroy();
+    weekEarnChart = new Chart(document.getElementById("weekEarnChart"), {
+        type: "line",
+        data: {
+            labels: weekData.labels,
+            datasets: [{
+                label: "Earnings (₹)",
+                data: weekData.earn,
+                borderColor: "rgba(255,99,132,0.9)",
+                fill:false
+            }]
+        }
+    });
+
+
+    // 3) MONTH BREAKDOWN
+    const monthData = await fetch(`/api/item_month_breakdown/${id}`).then(r => r.json());
+
+    if (monthQtyChart) monthQtyChart.destroy();
+    monthQtyChart = new Chart(document.getElementById("monthQtyChart"), {
+        type: "bar",
+        data: {
+            labels: monthData.labels,
+            datasets: [{
+                label: "Qty",
+                data: monthData.qty,
+                backgroundColor: "rgba(75,192,192,0.7)"
+            }]
+        }
+    });
+
+    if (monthEarnChart) monthEarnChart.destroy();
+    monthEarnChart = new Chart(document.getElementById("monthEarnChart"), {
+        type: "line",
+        data: {
+            labels: monthData.labels,
+            datasets: [{
+                label: "Earnings (₹)",
+                data: monthData.earn,
+                borderColor: "rgba(255,159,64,1)",
+                fill: false
+            }]
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

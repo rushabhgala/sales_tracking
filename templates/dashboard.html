@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        h1 { margin-bottom: 30px; }
+
+        .card {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .small {
+            color: #888;
+            font-size: 14px;
+        }
+
+        a {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/">← Back to Home</a>
+
+    <h1>Overview Dashboard</h1>
+
+    <!-- MAIN METRICS GRID -->
+    <div class="grid">
+
+        <div class="card">
+            <div class="small">Today’s Total Qty Sold</div>
+            <div class="value">{{ daily_total }}</div>
+        </div>
+
+        <div class="card">
+            <div class="small">Today’s Earnings (₹)</div>
+            <div class="value">₹{{ "%.2f"|format(daily_earnings) }}</div>
+        </div>
+
+        <div class="card">
+            <div class="small">Weekly Earnings (₹)</div>
+            <div class="value">₹{{ "%.2f"|format(weekly_earnings) }}</div>
+        </div>
+
+        <div class="card">
+            <div class="small">Monthly Earnings (₹)</div>
+            <div class="value">₹{{ "%.2f"|format(monthly_earnings) }}</div>
+        </div>
+
+        <div class="card">
+            <div class="small">Number of Menu Items</div>
+            <div class="value">{{ total_items }}</div>
+        </div>
+
+        <div class="card">
+            <div class="small">Total Sales Logged</div>
+            <div class="value">{{ total_sales_logs }}</div>
+        </div>
+
+    </div>
+
+    <!-- BEST SELLERS -->
+    <h2>Best Sellers</h2>
+
+    <div class="card">
+        <div class="small">Today</div>
+        {% if best_today %}
+            <div class="value">{{ best_today.name }} ({{ best_today.qty }} sold)</div>
+        {% else %}
+            <div>No sales today</div>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="small">This Week</div>
+        {% if best_week %}
+            <div class="value">{{ best_week.name }} ({{ best_week.qty }} sold)</div>
+        {% else %}
+            <div>No sales this week</div>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="small">This Month</div>
+        {% if best_month %}
+            <div class="value">{{ best_month.name }} ({{ best_month.qty }} sold)</div>
+        {% else %}
+            <div>No sales this month</div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

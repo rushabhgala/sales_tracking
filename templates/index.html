@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Icons (Feather Icons) -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f6fa;
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 30px;
+            color: #333;
+        }
+
+        /* Modern navigation grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .nav-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.15s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .nav-card i {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .nav-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* Card sections */
+        .section-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 30px;
+        }
+
+        label { font-weight: 600; margin-top: 10px; display: block; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-top: 6px;
+            background: #fafafa;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .flash.success { background: #e6ffed; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+        .flash.error { background: #ffe6e6; padding: 12px; border-radius: 8px; margin-bottom: 15px; }
+    </style>
+</head>
+
+<body>
+
+    <h1>Sales Tracker</h1>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% for category, msg in messages %}
+            <div class="flash {{ category }}">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Modern Navigation Grid -->
+    <div class="nav-grid">
+
+        <a class="nav-card" href="#add-item">
+            <i data-feather="plus-circle"></i>
+            <div class="nav-title">Add Item</div>
+        </a>
+
+        <a class="nav-card" href="#log-sale">
+            <i data-feather="shopping-cart"></i>
+            <div class="nav-title">Log Sale</div>
+        </a>
+
+        <a class="nav-card" href="/items">
+            <i data-feather="edit-3"></i>
+            <div class="nav-title">Manage Items</div>
+        </a>
+
+        <a class="nav-card" href="/dashboard">
+            <i data-feather="bar-chart-2"></i>
+            <div class="nav-title">Dashboard</div>
+        </a>
+
+        <a class="nav-card" href="/stats">
+            <i data-feather="pie-chart"></i>
+            <div class="nav-title">Stats & Charts</div>
+        </a>
+
+    </div>
+
+
+    <!-- Add Menu Item -->
+    <div class="section-card" id="add-item">
+        <h2>Add Menu Item</h2>
+        <form method="post">
+            <input type="hidden" name="form_type" value="add_item">
+
+            <label>Name</label>
+            <input type="text" name="name" required>
+
+            <label>Price (₹)</label>
+            <input type="number" name="price" step="0.01" required>
+
+            <button>Add Item</button>
+        </form>
+    </div>
+
+
+    <!-- Log Sale -->
+    <div class="section-card" id="log-sale">
+        <h2>Log a Sale</h2>
+        <form method="post">
+            <input type="hidden" name="form_type" value="log_sale">
+
+            <label>Menu Item</label>
+            <select name="item_id" required>
+                <option value="">Select item</option>
+                {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Date</label>
+            <input type="date" name="date" value="{{ today }}" required>
+
+            <label>Quantity Sold</label>
+            <input type="number" name="quantity" min="0" required>
+
+            <button>Log Sale</button>
+        </form>
+    </div>
+
+    <script>
+        feather.replace();
+    </script>
+
+</body>
+</html>

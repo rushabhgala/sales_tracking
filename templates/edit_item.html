@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Item</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 10px; margin-top: 5px; }
+        button { padding: 10px 15px; background: #007bff; color: white; border: none; margin-top: 20px; }
+        h1 { margin-bottom: 20px; }
+    </style>
+</head>
+
+<body>
+
+    <a href="/items">← Back to Items</a>
+    <h1>Edit Menu Item</h1>
+
+    <form method="post">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ item.name }}" required>
+
+        <label>Price (₹)</label>
+        <input type="number" name="price" step="0.01" value="{{ item.price }}" required>
+
+        <button>Save Changes</button>
+    </form>
+
+</body>
+</html>
