@@ -37,24 +37,6 @@ A simple, fast, and mobile-friendly **Flask application** to track daily, weekly
 
 ---
 
-## 📂 Project Structure
-sales_tracking/
-│
-├── app.py # Main Flask app
-├── api.py # JSON API endpoints
-├── models.py # Database models
-├── stats.py # Analytics logic
-├── database.py # DB engine + session
-├── requirements.txt # Python dependencies
-│
-├── templates/ # HTML templates
-│ ├── index.html
-│ ├── items.html
-│ ├── edit_item.html
-│ ├── stats.html
-│ └── dashboard.html
-│
-└── menu_tracker.db # SQLite DB (ignored in Git)
 
 ## 🛠 Installation
 
